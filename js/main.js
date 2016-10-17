@@ -7,6 +7,10 @@ function setInitialFields() {
 	var form = $("form")[0];
 	var urlVars = getUrlVars();
 	form["brand"].value = sanitiseText(urlVars["brand"]);
+	form["style"].value = sanitiseText(urlVars["style"]);
+	form["abv"].value = sanitiseText(urlVars["abv"]);
+	form["batch"].value = sanitiseText(urlVars["batch"]);
+	form["date"].value = sanitiseText(urlVars["date"]);
 	form["corners"].checked = sanitiseBool(urlVars["corners"]);
 }
 
@@ -15,6 +19,10 @@ function getFormObject() {
 	var form = $("form")[0];
 	opt.format = form["format"].value;
 	opt.brand = form["brand"].value;
+	opt.style = form["style"].value;
+	opt.abv = form["abv"].value;
+	opt.batch = form["batch"].value;
+	opt.date = form["date"].value;
 	opt.corners = form["corners"].checked;
 
 	opt.pageWidth = A4Height / 2;
@@ -76,10 +84,23 @@ function setupPageSize(opt,c1,c2) {
 function drawSingleLabel(ctx,opt) {
 	var w = opt.singleWidth;
 	var h = opt.singleHeight;
-	ctx.beginPath();
-	ctx.rect(20, 20, 150, 100);
-	ctx.fillStyle = "red";
-	ctx.fill();
+
+	ctx.font = "48px serif";
+	ctx.textAlign="center";
+	ctx.fillText(opt.brand,w/2,h*0.2);
+
+	ctx.font = "32px serif";
+	ctx.textAlign="center";
+	ctx.fillText(opt.style,w/2,h*0.3);
+
+
+	ctx.font = "32px serif";
+	ctx.textAlign="center";
+	ctx.fillText("Batch " + opt.batch,w/2,h*0.4);
+
+	ctx.font = "32px serif";
+	ctx.textAlign="center";
+	ctx.fillText(opt.date,w/2,h*0.5);
 
 	if(opt.corners) {
 		var cornerPct = 0.15;
@@ -103,11 +124,16 @@ function drawSingleLabel(ctx,opt) {
 
 }
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
 function sanitiseText(text) {
 	if(text == undefined) {
 		return "";
 	}
-	return text;
+	return text.replaceAll("+"," ");
 }
 
 function sanitiseBool(text) {
