@@ -10,12 +10,20 @@
 <body>
 <h1>Beerlabel generator</h1>
 <form class="pure-form pure-form-aligned" id="main-form">
-	<label for="format">Page format</label>
-	<select name="format">
-	<option value="4x3">4x3</option>
-	</select>
-	<label for="brand">Brand name</label>
-	<input type="text" name="brand">
+	<div class="pure-control-group">
+		<label for="format">Page format</label>
+		<select name="format">
+			<option value="4x3">4x3</option>
+		</select>
+	</div>
+	<div class="pure-control-group">
+		<label for="brand">Brand name</label>
+		<input type="text" name="brand">
+	</div>
+	<div class="pure-control-group">
+		<label for="corners">Show corner guides</label>
+		<input name="corners" type="checkbox">
+	</div>
 	<button onlcick="redraw()">Redraw</button>
 
 </form>
