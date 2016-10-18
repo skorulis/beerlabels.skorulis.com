@@ -1,7 +1,9 @@
-$("form").change(redraw);
+$("form").change(formChanged);
 
 var A4Width = 2480;
 var A4Height = 3508;
+
+var loadedFonts = [];
 
 function setInitialFields() {
 	var form = $("form")[0];
@@ -12,12 +14,28 @@ function setInitialFields() {
 	form["batch"].value = sanitiseText(urlVars["batch"]);
 	form["date"].value = sanitiseText(urlVars["date"]);
 	form["corners"].checked = sanitiseBool(urlVars["corners"]);
+	
+	var font = sanitiseText(urlVars["font"]);
+	if (font == undefined || font.length == 0) {
+		font = "Droid Sans";
+	}
+	form["font"].value = font
+
+	loadFont(font);
+}
+
+function formChanged(event) {
+	event.preventDefault();
+	var opt = getFormObject();
+	loadFont(opt.font);
+	redraw(opt);
 }
 
 function getFormObject() {
 	var opt = {};
 	var form = $("form")[0];
 	opt.format = form["format"].value;
+	opt.font = form["font"].value;
 	opt.brand = form["brand"].value;
 	opt.style = form["style"].value;
 	opt.abv = form["abv"].value;
@@ -35,8 +53,8 @@ function getFormObject() {
 	return opt;
 }
 
-function redraw() {
-	var opt = getFormObject();
+function redraw(opt) {
+	console.log("redraw");
 	var c1 = $("#single-label")[0];
 	var c2 = $("#full-label")[0];
 	setupPageSize(opt,c1,c2);
@@ -85,20 +103,21 @@ function drawSingleLabel(ctx,opt) {
 	var w = opt.singleWidth;
 	var h = opt.singleHeight;
 
-	ctx.font = "48px serif";
+	ctx.font = "48px " + opt.font;
 	ctx.textAlign="center";
 	ctx.fillText(opt.brand,w/2,h*0.2);
 
-	ctx.font = "32px serif";
+	ctx.font = "32px " + opt.font;
 	ctx.textAlign="center";
 	ctx.fillText(opt.style,w/2,h*0.3);
 
+	if(opt.batch.length > 0) {
+		ctx.font = "32px " + opt.font;
+		ctx.textAlign="center";
+		ctx.fillText("Batch " + opt.batch,w/2,h*0.4);	
+	}
 
-	ctx.font = "32px serif";
-	ctx.textAlign="center";
-	ctx.fillText("Batch " + opt.batch,w/2,h*0.4);
-
-	ctx.font = "32px serif";
+	ctx.font = "32px " + opt.font;
 	ctx.textAlign="center";
 	ctx.fillText(opt.date,w/2,h*0.5);
 
@@ -152,5 +171,24 @@ function getUrlVars() {
     return vars;
 }
 
+function loadFont(font) {
+	if(loadedFonts.includes(font)) {
+		return;
+	}
+
+	var WebFontConfig = {
+		google: {
+      		families: [font]
+    	}
+	};
+
+	WebFontConfig.active = function() {
+		console.log("Fonts active");
+		redraw(getFormObject());
+	}
+
+	WebFont.load(WebFontConfig);
+}
+
 setInitialFields();
-redraw();
+redraw(getFormObject());
