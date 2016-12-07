@@ -5,6 +5,15 @@ var A4Height = 3508;
 
 var loadedFonts = [];
 
+var headerImg = new Image();
+headerImg.src = "/img/logo.png";
+
+var hopImg = new Image();
+hopImg.src = "/img/hop.png";
+
+var riceImg = new Image();
+riceImg.src = "/img/rice.png";
+
 function setInitialFields() {
 	var form = $("form")[0];
 	var urlVars = getUrlVars();
@@ -103,35 +112,60 @@ function drawSingleLabel(ctx,opt) {
 	var w = opt.singleWidth;
 	var h = opt.singleHeight;
 
-	ctx.font = "48px " + opt.font;
-	ctx.textAlign="center";
-	ctx.fillText(opt.brand,w/2,h*0.2);
+	var headerSpace = h * 0.45;
 
-	ctx.font = "32px " + opt.font;
 	ctx.textAlign="center";
-	ctx.fillText(opt.style,w/2,h*0.3);
+	if(headerImg != null && headerImg.width > 0) {
+		var maxWidth = w * 0.8;
+		var imgWidth = Math.min(maxWidth,headerImg.width);
+		var scale = imgWidth/headerImg.width;
+		var imgHeight = headerImg.height * scale;
+		var x = (w - imgWidth)/2;
+		var y = (headerSpace - imgHeight)/2;
+
+		console.log(headerImg.width);
+		ctx.drawImage(headerImg,x,y,imgWidth,imgHeight);
+	} else {
+		ctx.font = "64px " + opt.font;
+		ctx.fillText(opt.brand,w/2,h*0.3);
+	}
+	
+
+	ctx.font = "42px " + opt.font;
+	ctx.fillText(opt.style,w/2,h*0.5);
+	var styleWidth = ctx.measureText(opt.style).width;
+
+	if(opt.abv.length > 0) {
+		ctx.font = "24px " + opt.font;
+		ctx.textAlign="left";
+		ctx.fillText(opt.abv + "%",w/2+styleWidth/2 + 20,h*0.5 - 5);	
+	}
+	
 
 	if(opt.batch.length > 0) {
-		ctx.font = "32px " + opt.font;
+		ctx.font = "36px " + opt.font;
 		ctx.textAlign="center";
-		ctx.fillText("Batch " + opt.batch,w/2,h*0.4);	
+		ctx.fillText("Batch #" + opt.batch,w/2,h*0.65);	
 	}
 
-	ctx.font = "32px " + opt.font;
-	ctx.textAlign="center";
-	ctx.fillText(opt.date,w/2,h*0.5);
+	ctx.font = "30px " + opt.font;
+	ctx.fillText(opt.date,w/2,h*0.8);
+
+	drawImg(hopImg,ctx,w*0.15,h*0.59,100,100);
+	drawImg(riceImg,ctx,w*0.85,h*0.59,100,100);
 
 	if(opt.corners) {
-		var cornerPct = 0.15;
+		var cornerPct = 0.14;
+		var cornerLen = w * cornerPct;
 		var cornerPoints = [
-			0,h * cornerPct,
-			w * cornerPct,0,
-			w * (1 - cornerPct),0,
-			w,h * cornerPct,
-			w,h * (1 - cornerPct),
-			w * (1 - cornerPct),h,
-			w * cornerPct,h,
-			0,h * (1 - cornerPct)
+			0,cornerLen,
+			cornerLen,0,
+			w - cornerLen,0,
+			w,cornerLen,
+			w,h - cornerLen,
+			w - cornerLen,h,
+			cornerLen,h,
+			0,h - cornerLen
 		];
 		for(var i = 0; i < 4; ++i) {
 			ctx.beginPath();
@@ -141,6 +175,21 @@ function drawSingleLabel(ctx,opt) {
 		}
 	}
 
+}
+
+function drawImg(img,ctx,x,y,width,height) {
+	var drawWidth = width;
+	var drawHeight = height;
+	if(img.width > img.height) {
+		drawHeight = width/img.width * img.height;
+	} else {
+		drawWidth = height/img.height * img.width;
+	}
+	console.log(drawHeight  + "," + drawHeight);
+	
+
+
+	ctx.drawImage(img,x - drawWidth/2,y - drawHeight/2,drawWidth,drawHeight);
 }
 
 String.prototype.replaceAll = function(search, replacement) {
