@@ -8,11 +8,11 @@ var loadedFonts = [];
 var headerImg = new Image();
 headerImg.src = "/img/logo.png";
 
-var hopImg = new Image();
-hopImg.src = "/img/hop.png";
+var image1 = new Image();
+image1.src = "/img/belgian.png";
 
-var riceImg = new Image();
-riceImg.src = "/img/rice.png";
+var image2 = new Image();
+image2.src = "/img/apple.png";
 
 function setInitialFields() {
 	var form = $("form")[0];
@@ -76,6 +76,7 @@ function redraw(opt) {
 	var cols = 3;
 
 	ctx.lineWidth = 1;
+	ctx.strokeStyle = "rgba(0,0,0,0.5)";
 
 	for (var i = 0; i < cols+1; ++i) {
 		ctx.beginPath();
@@ -151,8 +152,11 @@ function drawSingleLabel(ctx,opt) {
 	ctx.font = "30px " + opt.font;
 	ctx.fillText(opt.date,w/2,h*0.8);
 
-	drawImg(hopImg,ctx,w*0.15,h*0.59,100,100);
-	drawImg(riceImg,ctx,w*0.85,h*0.59,100,100);
+	var imgY = h*0.67;
+	var imgSize = 80;
+
+	drawImg(image1,ctx,w*0.15,imgY,imgSize,imgSize);
+	drawImg(image2,ctx,w*0.85,imgY,imgSize,imgSize);
 
 	if(opt.corners) {
 		var cornerPct = 0.14;
@@ -167,6 +171,7 @@ function drawSingleLabel(ctx,opt) {
 			cornerLen,h,
 			0,h - cornerLen
 		];
+
 		for(var i = 0; i < 4; ++i) {
 			ctx.beginPath();
 			ctx.moveTo(cornerPoints[i * 4],cornerPoints[i * 4 + 1]);
@@ -187,8 +192,6 @@ function drawImg(img,ctx,x,y,width,height) {
 	}
 	console.log(drawHeight  + "," + drawHeight);
 	
-
-
 	ctx.drawImage(img,x - drawWidth/2,y - drawHeight/2,drawWidth,drawHeight);
 }
 
