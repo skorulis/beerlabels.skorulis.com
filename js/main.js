@@ -9,10 +9,10 @@ var headerImg = new Image();
 headerImg.src = "/img/logo.png";
 
 var image1 = new Image();
-image1.src = "/img/belgian.png";
+image1.src = "/img/hops.png";
 
 var image2 = new Image();
-image2.src = "/img/apple.png";
+image2.src = "/img/coconut.png";
 
 function setInitialFields() {
 	var form = $("form")[0];
@@ -117,7 +117,7 @@ function drawSingleLabel(ctx,opt) {
 
 	ctx.textAlign="center";
 	if(headerImg != null && headerImg.width > 0) {
-		var maxWidth = w * 0.8;
+		var maxWidth = w * 0.75;
 		var imgWidth = Math.min(maxWidth,headerImg.width);
 		var scale = imgWidth/headerImg.width;
 		var imgHeight = headerImg.height * scale;
@@ -144,13 +144,13 @@ function drawSingleLabel(ctx,opt) {
 	
 
 	if(opt.batch.length > 0) {
-		ctx.font = "36px " + opt.font;
+		ctx.font = "28px " + opt.font;
 		ctx.textAlign="center";
-		ctx.fillText("Batch #" + opt.batch,w/2,h*0.65);	
+		ctx.fillText("Batch #" + opt.batch,w/2,h*0.67);	
 	}
 
-	ctx.font = "30px " + opt.font;
-	ctx.fillText(opt.date,w/2,h*0.8);
+	ctx.font = "28px " + opt.font;
+	ctx.fillText(opt.date,w/2,h*0.78);
 
 	var imgY = h*0.67;
 	var imgSize = 80;
