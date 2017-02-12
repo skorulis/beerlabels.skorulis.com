@@ -8,12 +8,6 @@ var loadedFonts = [];
 var headerImg = new Image();
 headerImg.src = "/img/logo.png";
 
-var image1 = new Image();
-image1.src = "/img/hops.png";
-
-var image2 = new Image();
-image2.src = "/img/coconut.png";
-
 function setInitialFields() {
 	var form = $("form")[0];
 	var urlVars = getUrlVars();
@@ -29,6 +23,8 @@ function setInitialFields() {
 		font = "Droid Sans";
 	}
 	form["font"].value = font
+	form["left-image"].value = sanitiseText(urlVars["left-image"]);
+	form["right-image"].value = sanitiseText(urlVars["right-image"]);
 
 	loadFont(font);
 }
@@ -51,6 +47,11 @@ function getFormObject() {
 	opt.batch = form["batch"].value;
 	opt.date = form["date"].value;
 	opt.corners = form["corners"].checked;
+	opt.leftImage = new Image();
+	opt.leftImage.src = "/img/" + form["left-image"].value + ".png";
+	
+	opt.rightImage = new Image();
+	opt.rightImage.src = "/img/" + form["right-image"].value + ".png";
 
 	opt.pageWidth = A4Height / 2;
 	opt.pageHeight = A4Width / 2;
@@ -155,8 +156,8 @@ function drawSingleLabel(ctx,opt) {
 	var imgY = h*0.67;
 	var imgSize = 80;
 
-	drawImg(image1,ctx,w*0.15,imgY,imgSize,imgSize);
-	drawImg(image2,ctx,w*0.85,imgY,imgSize,imgSize);
+	drawImg(opt.leftImage,ctx,w*0.15,imgY,imgSize,imgSize);
+	drawImg(opt.rightImage,ctx,w*0.85,imgY,imgSize,imgSize);
 
 	if(opt.corners) {
 		var cornerPct = 0.14;
