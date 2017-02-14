@@ -37,6 +37,7 @@ function formChanged(event) {
 }
 
 function getFormObject() {
+	var urlVars = getUrlVars();
 	var opt = {};
 	var form = $("form")[0];
 	opt.format = form["format"].value;
@@ -47,6 +48,8 @@ function getFormObject() {
 	opt.batch = form["batch"].value;
 	opt.date = form["date"].value;
 	opt.corners = form["corners"].checked;
+	opt.useImage = sanitiseBool(urlVars["headerImage"]);
+
 	opt.leftImage = new Image();
 	opt.leftImage.src = "/img/" + form["left-image"].value + ".png";
 	
@@ -59,7 +62,6 @@ function getFormObject() {
 	opt.singleWidth = opt.pageWidth / 3;
 	opt.singleHeight = opt.pageHeight / 4;
 
-	console.log(opt);
 	return opt;
 }
 
@@ -117,7 +119,7 @@ function drawSingleLabel(ctx,opt) {
 	var headerSpace = h * 0.45;
 
 	ctx.textAlign="center";
-	if(headerImg != null && headerImg.width > 0) {
+	if(opt.useImage) {
 		var maxWidth = w * 0.75;
 		var imgWidth = Math.min(maxWidth,headerImg.width);
 		var scale = imgWidth/headerImg.width;
@@ -125,7 +127,6 @@ function drawSingleLabel(ctx,opt) {
 		var x = (w - imgWidth)/2;
 		var y = (headerSpace - imgHeight)/2;
 
-		console.log(headerImg.width);
 		ctx.drawImage(headerImg,x,y,imgWidth,imgHeight);
 	} else {
 		ctx.font = "64px " + opt.font;
@@ -159,7 +160,7 @@ function drawSingleLabel(ctx,opt) {
 	drawImg(opt.leftImage,ctx,w*0.15,imgY,imgSize,imgSize);
 	drawImg(opt.rightImage,ctx,w*0.85,imgY,imgSize,imgSize);
 
-	if(opt.corners) {
+	if(!opt.corners) {
 		var cornerPct = 0.14;
 		var cornerLen = w * cornerPct;
 		var cornerPoints = [
@@ -191,7 +192,6 @@ function drawImg(img,ctx,x,y,width,height) {
 	} else {
 		drawWidth = height/img.height * img.width;
 	}
-	console.log(drawHeight  + "," + drawHeight);
 	
 	ctx.drawImage(img,x - drawWidth/2,y - drawHeight/2,drawWidth,drawHeight);
 }
