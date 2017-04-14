@@ -49,12 +49,18 @@ function getFormObject() {
 	opt.date = form["date"].value;
 	opt.corners = form["corners"].checked;
 	opt.useImage = sanitiseBool(urlVars["headerImage"]);
+	console.log(opt.useImage);
+	console.log(urlVars["headerImage"]);
 
-	opt.leftImage = new Image();
-	opt.leftImage.src = "/img/" + form["left-image"].value + ".png";
+	if(form["left-image"].value) {
+		opt.leftImage = new Image();
+		opt.leftImage.src = "/img/" + form["left-image"].value + ".png";	
+	}
 	
-	opt.rightImage = new Image();
-	opt.rightImage.src = "/img/" + form["right-image"].value + ".png";
+	if(form["right-image"].value) {
+		opt.rightImage = new Image();
+		opt.rightImage.src = "/img/" + form["right-image"].value + ".png";	
+	}
 
 	opt.pageWidth = A4Height / 2;
 	opt.pageHeight = A4Width / 2;
@@ -185,6 +191,9 @@ function drawSingleLabel(ctx,opt) {
 }
 
 function drawImg(img,ctx,x,y,width,height) {
+	if(!img) {
+		return;
+	}
 	var drawWidth = width;
 	var drawHeight = height;
 	if(img.width > img.height) {
