@@ -214,7 +214,7 @@ function sanitiseText(text) {
 	if(text == undefined) {
 		return "";
 	}
-	return text.replaceAll("+"," ");
+	return text.replaceAll("+"," ").replaceAll("%20"," ");
 }
 
 function sanitiseBool(text) {
